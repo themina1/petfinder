@@ -5,7 +5,6 @@ from .models import Cat
 from .models import Unique
 
 # Register your models here.
-admin.site.register(CommonInfo)
 admin.site.register(Dog)
 admin.site.register(Cat)
 admin.site.register(Unique)
