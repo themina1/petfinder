@@ -5,6 +5,13 @@
     <title>Cats</title>
 </head>
 <body>
-Cats
+<h1>Cats</h1>
+{% for cat in catlist %}
+	<div>
+		<h3><a href="{% url 'petfind.views.cats_detail' pk=cat.petId %}">Name: {{ cat.petName }}</a></h3>
+		<p> ID: {{ cat.petId }}</p>
+		<p> Status: {{ cat.petStatus }}</p>
+	</div>
+{% endfor %}
 </body>
 </html>

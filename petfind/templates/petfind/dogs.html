@@ -5,6 +5,13 @@
     <title>Dogs</title>
 </head>
 <body>
-Dogs
+<h1>Dogs</h1>
+{% for dog in doglist %}
+	<div>
+		<h3><a href="{% url 'petfind.views.dogs_detail' pk=dog.petId %}">Name: {{ dog.petName }}</a></h3>
+		<p> ID: {{ dog.petId }}</p>
+		<p> Status: {{ dog.petStatus }}</p>
+	</div>
+{% endfor %}
 </body>
 </html>

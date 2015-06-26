@@ -1,0 +1,14 @@
+{% extends "petfind/base.html" %}
+
+{% block content %}
+    <div>
+        <h1>Welcome to Petfinder!</h1>
+    </div>
+
+    <div>
+    	<h2>What kind of animal are you looking for?</h2>
+        <h3><a href="{% url 'petfind.views.cats' %}">Cats</a></h3>
+        <h3><a href="{% url 'petfind.views.dogs' %}">Dogs</a></h3>
+        <h3><a href="{% url 'petfind.views.unique' %}">Unique Animals</a></h3>
+    </div>
+{% endblock content %}

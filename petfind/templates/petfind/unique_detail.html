@@ -1,0 +1,30 @@
+{% extends "petfind/base.html" %}
+
+{% block content %}
+	<div class="detail">
+		<h1> Name: {{ unique.petName }}</h1>
+		<h2> ID: {{ unique.petId }}</h2>
+	</div>
+	<div>
+		<h2>Unique Details</h2>
+		<p>Time in Shelter: {{ unique.timeInShelter }}</p>
+		<p>Breed: {{ unique.petBreed }}</p>
+		<p>Description: {{ unique.petDescription }}</p>
+		<p>Status: {{ unique.petStatus }}</p>
+		<p>Age: {{ unique.petAge }}</p>
+		<p>Sex: {{ unique.petSex }}</p>
+		<p>Size: {{ unique.petSize }}</p>
+		<p>Mix: {{ unique.petMix }}</p>
+		<p>Features: {{ unique.petFeatures }}</p> 
+	</div>
+	<div>
+		<h2>Contact Info</h2>
+		<p>Address: {{ unique.address }}</p>
+		<p>City: {{ unique.city }}</p>
+		<p>State: {{ unique.state }}</p>
+		<p>Zip: {{ unique.zip }}</p>
+		<p>E-Mail: {{ unique.email }}</p>
+		<p>Fax: {{ unique.fax }}</p>
+		<p>Phone: {{ unique.phone }}</p>
+	</div>
+{% endblock %}

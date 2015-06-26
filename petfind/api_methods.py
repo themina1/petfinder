@@ -1,148 +1,93 @@
-__author__ = 'shnoudahm'
+# Required imports
 
 from urllib.request import urlopen
 from json import load
-from .models import *
 import codecs
 import pprint
+import os
+import django
 
-aType = input('What kind of animal do you want to search for? (dog or cat)')
-if aType != 'dog' and aType != 'cat':
-    aType = 'unique'
+os.environ.__setitem__("DJANGO_SETTINGS_MODULE", "petsite.settings")
 
-URL = 'http://api.petfinder.com/'
-#METHOD = 'pet.find?'
-KEY = 'key=6d3a2622c9ee34420afe02206d1cee12'
-ID = '&id=VA321'
-LOC = '&location=24450'
-OFFSET = '&offset=0'
-COUNT = '&count=10'
-ANIMAL = '&animal=' + aType
-OUTPUT = '&output=basic'
-FORMAT = '&format=json'
+import petfind.models
+# To access Django Models in our script
 
-reader = codecs.getreader('utf-8')
+django.setup()
 
-def shelter_getPets(URL, KEY, ID, FORMAT, COUNT):
-    METHOD = 'shelter.getPets?'
-    URL += METHOD + KEY + ID + FORMAT + COUNT
-    response = urlopen(URL)
-    json_obj = load(reader(response))
-    return json_obj
+# Defining the constants:
+KEY = "6d3a2622c9ee34420afe02206d1cee12"
+URL = "http://api.petfinder.com/"
+URL_JSON_KEY = "key=" + KEY + "&format=json"
+SHELTER_ID = "&id=VA321"
+LOCATION = "&location=24450"
 
-def add_pet(json_obj):
-    for pet in petinfo['petfinder']['pets']['pet']:
 
-        age = pet['age']['$t']
-        animal = pet['animal']['$t']
-        breeds = pet['breeds']['$t']
-        address1 = pet['contact']['address1']['$t']
-        address2 = pet['contact']['address2']['$t']
-        city = pet['contact']['city']['$t']
-        email = pet['contact']['email']['$t']
-        fax = pet['contact']['fax']['$t']
-        phone = pet['contact']['phone']['$t']
-        state = pet['contact']['state']['$t']
-        zip = pet['contact']['zip']['$t']
-        description = pet['description']['$t']
-        id = pet['id']['$t']
-        lastUpdate = pet['lastUpdate']['$t']
-        media = pet['media']['photos']['photo']['$t']
-        mix = pet['mix']['$t']
+# To make the json readable in utf-8
+
+reader = codecs.getreader("utf-8")
+
+# Main method:
+
+
+def shelterGetPets(url, URL_JSON_KEY, shelter_id):
+    """Returns the json object containing all the pet info from a particular shelter"""
+    
+    method = "shelter.getPets?"
+    count = "&count=50"
+    url+= method + URL_JSON_KEY + shelter_id + count
+    petJson = urlopen(url)
+    petInfo = load(reader(petJson))
+    return petInfo
+
+def addAnimalsToDb(petsInfo):
+    """ This function takes a json file as an input and parses it. It collects info about
+    the pet and creates and saves the pet in their corresponding database table. """
+    
+    for pet in petsInfo['petfinder']['pets']['pet']:        
+        
+        #Parsing the json file to get individual information
+           
         name = pet['name']['$t']
-        options = pet['options']['$t']
-        sex = pet['sex']['$t']
-        shelterId = pet['shelterId']['$t']
-        shelterPetId = pet['shelterPetId']['$t']
-        size = pet['size']['$t']
+        pet_id = pet['id']['$t']
+        desc = pet['description']['$t']
+        age = pet['age']['$t']
+        breeds = pet['breeds']['breed']
+        breed = ""
+        try:                           # because some pets have multiple breed stored in a list
+            breed = breeds['$t']
+        except TypeError:
+            for x in breeds:
+                breed += x['$t'] + ", "
+                        
         status = pet['status']['$t']
-
-        if animal == 'dog':
-            dog = models.Dog(age = age,
-                             animal = animal,
-                             breeds = breeds,
-                             address1 = address1,
-                             address2 = address2,
-                             city = city,
-                             email = email,
-                             fax = fax,
-                             phone = phone,
-                             state = state,
-                             zip = zip,
-                             description = description,
-                             id = id,
-                             lastUpdate = lastUpdate,
-                             media = media,
-                             mix = mix,
-                             name = name,
-                             options = options,
-                             sex = sex,
-                             shelterId = shelterId,
-                             shelterPetId = shelterPetId,
-                             size = size,
-                             status = status)
-            dog.save()
-
-        if animal == 'cat':
-            cat = models.Cat(age = age,
-                             animal = animal,
-                             breeds = breeds,
-                             address1 = address1,
-                             address2 = address2,
-                             city = city,
-                             email = email,
-                             fax = fax,
-                             phone = phone,
-                             state = state,
-                             zip = zip,
-                             description = description,
-                             id = id,
-                             lastUpdate = lastUpdate,
-                             media = media,
-                             mix = mix,
-                             name = name,
-                             options = options,
-                             sex = sex,
-                             shelterId = shelterId,
-                             shelterPetId = shelterPetId,
-                             size = size,
-                             status = status)
+        sex = pet['sex']['$t']
+        size = pet['size']['$t']
+        mix = pet['mix']['$t']
+        features = pet['options']['option']
+        feature = ""
+        try:
+            feature = features['$t']
+        except TypeError:             # because some pets have multiple breed stored in a list
+            for x in features:
+                feature += x['$t'] + ", "
+        
+        if pet['animal']['$t']=="Cat":
+            cat = petfind.models.Cat(petId = pet_id, petName = name, petDescription = desc, petAge = age, petBreed = breed, petStatus = status, petSex = sex, petSize = size, petMix = mix, petFeatures = feature)
             cat.save()
-
+            
+        elif pet['animal']['$t']=="Dog":
+            dog = petfind.models.Dog(petId = pet_id, petName = name, petDescription = desc, petAge = age, petBreed = breed, petStatus = status, petSex = sex, petSize = size, petMix = mix, petFeatures = feature)
+            dog.save()
         else:
-            unique = models.Unique(age = age,
-                             animal = animal,
-                             breeds = breeds,
-                             address1 = address1,
-                             address2 = address2,
-                             city = city,
-                             email = email,
-                             fax = fax,
-                             phone = phone,
-                             state = state,
-                             zip = zip,
-                             description = description,
-                             id = id,
-                             lastUpdate = lastUpdate,
-                             media = media,
-                             mix = mix,
-                             name = name,
-                             options = options,
-                             sex = sex,
-                             shelterId = shelterId,
-                             shelterPetId = shelterPetId,
-                             size = size,
-                             status = status)
-            unique.save()
+            uniqueAnimal = petfind.models.UniqueAnimal(petId = pet_id, petName = name, petDescription = desc, petAge = age, petBreed = breed, petStatus = status, petSex = sex, petSize = size, petMix = mix, petFeatures = feature)
+            uniqueAnimal.save()
+    print("Pet information added to database")
+    print(features)
 
-petinfo = shelter_getPets(URL, KEY, ID, FORMAT, COUNT)
-pprint.pprint(petinfo)
-add_pet(petinfo)
+##########################################################################################################################
 
-"""
-URL += METHOD + KEY + LOC + ANIMAL + COUNT + OUTPUT + OFFSET + FORMAT
+if __name__ == "__main__":
 
-response = urlopen(URL)
-json_obj = load(reader(response))
-pprint.pprint(json_obj)
-"""
+    petsInfo = shelterGetPets(URL, URL_JSON_KEY, SHELTER_ID)
+    addAnimalsToDb(petsInfo)
+    pprint.pprint(petsInfo)

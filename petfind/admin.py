@@ -2,9 +2,9 @@ from django.contrib import admin
 from .models import CommonInfo
 from .models import Dog
 from .models import Cat
-from .models import Unique
+from .models import UniqueAnimal
 
 # Register your models here.
 admin.site.register(Dog)
 admin.site.register(Cat)
-admin.site.register(Unique)
+admin.site.register(UniqueAnimal)

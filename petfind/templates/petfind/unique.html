@@ -2,9 +2,16 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>Unique</title>
+    <title>Unique Animals</title>
 </head>
 <body>
-Unique
+<h1>Unique Animals</h1>
+{% for unique in uniquelist %}
+	<div>
+		<h3><a href="{% url 'petfind.views.uniques_detail' pk=unique.petId %}">Name: {{ unique.petName }}</a></h3>
+		<p> ID: {{ unique.petId }}</p>
+		<p> Status: {{ unique.petStatus }}</p>
+	</div>
+{% endfor %}
 </body>
 </html>

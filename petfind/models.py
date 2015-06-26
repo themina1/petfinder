@@ -1,39 +1,59 @@
 from django.db import models
 from django.utils import timezone
+import django
 
+# Common info for all models.
 class CommonInfo(models.Model):
-    age = models.CharField(max_length=50, verbose_name="Age", blank=True)
-    breeds = models.CharField(max_length=50, verbose_name="Breeds", blank=True)
-    address1 = models.CharField(max_length=50, verbose_name="Address1", blank=True)
-    address2 = models.CharField(max_length=50, verbose_name="Address2", blank=True)
-    city = models.CharField(max_length=50, verbose_name="City", blank=True)
-    email = models.CharField(max_length=50, verbose_name="E-Mail", blank=True)
-    fax = models.CharField(max_length=50,verbose_name="Fax", blank=True)
-    phone = models.CharField(max_length=50, verbose_name="Phone", blank=True)
-    state = models.CharField(max_length=2, verbose_name="State", blank=True)
-    zip = models.CharField(max_length=5, verbose_name="Zip Code", blank=True)
-    description = models.TextField(verbose_name="Description", blank=True)
-    id = models.IntegerField(verbose_name="id", default=0, unique=True, primary_key=True)
-    lastUpdate = models.DateTimeField(verbose_name="Date of Last Update", null=True, default=None, blank=True)
-    media = models.TextField(verbose_name="Media", blank=True)
-    mix = models.CharField(max_length=50, verbose_name="Mix", blank=True)
-    name = models.CharField(max_length=50, verbose_name="Name", blank=True)
-    options = models.CharField(max_length=50, verbose_name="Options", blank=True)
-    sex = models.CharField(max_length=50, verbose_name="Sex", blank=True)
-    shelterId = models.CharField(max_length=50, verbose_name="ShelterID", blank=True)
-    shelterPetId = models.CharField(max_length=50, verbose_name="ShelterPetID", blank=True)
-    size = models.CharField(max_length=50, verbose_name="Size", blank=True)
-    status = models.CharField(max_length=50, verbose_name="Status", blank=True)
+    petId = models.CharField(max_length=10, primary_key=True, verbose_name='ID', default=0)
+    petName = models.CharField(max_length=20, verbose_name='Name: ', blank=True)
+    timeInShelter = models.DateTimeField('In shelter since ', default=timezone.now())
+    petDescription = models.TextField(verbose_name='Description', blank=True)
+    petBreed = models.CharField(max_length=100, verbose_name='Breed', blank=True)
+    petStatus = models.CharField(max_length=50, verbose_name='Status', blank=True)
+    petAge = models.CharField(max_length=10, blank=True, verbose_name='Age')
+    petSex = models.CharField(max_length=10, blank=True, verbose_name='Sex')
+    petSize = models.CharField(max_length=10, blank=True, verbose_name='Size')
+    petMix = models.CharField(max_length=10, blank=True, verbose_name='Mixed?')
+    petFeatures = models.CharField(max_length=100, blank=True, verbose_name='Features')
+    address = models.CharField(max_length=200, blank=True, default='10 Animal Place')
+    city = models.CharField(max_length=50, blank=True, default='Lexington')
+    email = models.CharField(max_length=200, blank=True, default='shelter@rockbridgespca.net')
+    fax = models.CharField(max_length=200, blank=True, default='540-464-8847')
+    phone = models.CharField(max_length=200, blank=True, default='540-463-5123')
+    state = models.CharField(max_length=2, default='VA', blank=True)
+    zip = models.CharField(max_length=10, default='24450', blank=True)
 
     class Meta:
         abstract = True
 
-# Create three classes for dogs, cats, and unique
-class Dog(CommonInfo):
-    pass
+
+# Models for the main database
 
 class Cat(CommonInfo):
     pass
 
-class Unique(CommonInfo):
-    animal = models.CharField(max_length=50, verbose_name="Animal")
+    def __str__(self):
+        return "Id: " + self.petId
+
+    class Meta:
+        ordering = ['petId']
+
+
+class Dog(CommonInfo):
+    pass
+
+    def __str__(self):
+        return "Id: " + self.petId
+
+    class Meta:
+        ordering = ['petId']
+
+
+class UniqueAnimal(CommonInfo):
+    uniqueAnimal = models.CharField(max_length=15, blank=True)
+
+    def __str__(self):
+        return "Id: " + self.petId + "Animal: " + self.uniqueAnimal
+
+    class Meta:
+        ordering = ['petId']
