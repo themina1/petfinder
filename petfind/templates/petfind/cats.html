@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title>Cats</title>
-</head>
-<body>
+{% extends "petfind/base.html" %}
+
+{% block content %}
 <h1>Cats</h1>
 {% for cat in catlist %}
 	<div>
@@ -13,5 +9,4 @@
 		<p> Status: {{ cat.petStatus }}</p>
 	</div>
 {% endfor %}
-</body>
-</html>
+{% endblock content %}

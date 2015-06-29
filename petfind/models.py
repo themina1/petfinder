@@ -1,12 +1,11 @@
 from django.db import models
-from django.utils import timezone
-import django
 
 # Common info for all models.
 class CommonInfo(models.Model):
     petId = models.CharField(max_length=10, primary_key=True, verbose_name='ID', default=0)
     petName = models.CharField(max_length=20, verbose_name='Name: ', blank=True)
-    timeInShelter = models.DateTimeField('In shelter since ', default=timezone.now())
+    firstSeen = models.DateTimeField("First Seen", null = True)
+    lastSeen = models.DateTimeField("Last seen ", null = True)
     petDescription = models.TextField(verbose_name='Description', blank=True)
     petBreed = models.CharField(max_length=100, verbose_name='Breed', blank=True)
     petStatus = models.CharField(max_length=50, verbose_name='Status', blank=True)
