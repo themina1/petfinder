@@ -1,13 +1,16 @@
 {% extends "petfind/base.html" %}
 
+import timezone
+
 {% block content %}
 	<div class="detail">
 		<h1> Name: {{ cat.petName }}</h1>
-		<h2> ID: {{ cat.petId }}</h2>
+		<h3> ID: {{ cat.petId }}</h3>
 	</div>
 	<div>
 		<h2>Cat Details</h2>
-		<p>In the Shelter since: {{ cat.firstSeen }}</p>
+		<!-- How to find how long a pet has been in the petfinder DB -->
+		<p>Time in the Shelter: {{ cat.firstSeen|timesince:cat.lastSeen }}</p>
 		<p>Breed: {{ cat.petBreed }}</p>
 		<p>Description: {{ cat.petDescription }}</p>
 		<p>Status: {{ cat.petStatus }}</p>

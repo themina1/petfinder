@@ -3,11 +3,12 @@
 {% block content %}
 	<div class="detail">
 		<h1> Name: {{ dog.petName }}</h1>
-		<h2> ID: {{ dog.petId }}</h2>
+		<h3> ID: {{ dog.petId }}</h3>
 	</div>
 	<div>
 		<h2>Dog Details</h2>
-		<p>In the Shelter since: {{ dog.firstSeen }}</p>
+		<!-- How to find how long a pet has been in the petfinder DB -->
+		<p>Time in the Shelter: {{ dog.firstSeen|timesince:dog.lastSeen }}</p>
 		<p>Breed: {{ dog.petBreed }}</p>
 		<p>Description: {{ dog.petDescription }}</p>
 		<p>Status: {{ dog.petStatus }}</p>

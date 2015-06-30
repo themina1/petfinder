@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
+from datetime import timedelta
 from .models import Cat
 from .models import Dog
 from .models import UniqueAnimal
@@ -10,7 +11,14 @@ def animal_list(request):
 
 def cats(request):
     catlist = Cat.objects.filter(firstSeen__lte=timezone.now()).order_by('firstSeen')
-    return render(request, 'petfind/cats.html', {'catlist': catlist})
+    catCount = catlist.count()
+    sum = timedelta(days=0)
+    for cat in catlist:
+        timediff = cat.lastSeen - cat.firstSeen
+        sum += timediff
+    avg = sum/catCount
+    print(avg)        
+    return render(request, 'petfind/cats.html', {'catlist': catlist, 'catCount': catCount, 'avg': avg})
 
 def cats_detail(request, pk):
     cat = get_object_or_404(Cat, pk=pk)

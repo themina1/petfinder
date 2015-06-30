@@ -1,12 +1,13 @@
 {% extends "petfind/base.html" %}
 
 {% block content %}
-<h1>Cats</h1>
+<h1>Cats! There are {{ catCount }} cats listed!</h1>
+<h5>The average time for cats to be adopted is {{ avg }}</h5>
 {% for cat in catlist %}
 	<div>
-		<h3><a href="{% url 'petfind.views.cats_detail' pk=cat.petId %}">Name: {{ cat.petName }}</a></h3>
-		<p> ID: {{ cat.petId }}</p>
-		<p> Status: {{ cat.petStatus }}</p>
+		<h2><a href="{% url 'petfind.views.cats_detail' pk=cat.petId %}">Name: {{ cat.petName }}</a></h2>
+		<h4> ID: {{ cat.petId }}</h4>
+		<h4> Status: {{ cat.petStatus }}</h4>
 	</div>
 {% endfor %}
 {% endblock content %}

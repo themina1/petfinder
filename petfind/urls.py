@@ -1,4 +1,6 @@
 from django.conf.urls import url
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
 from . import views
 
 urlpatterns = [
@@ -10,3 +12,5 @@ urlpatterns = [
     url(r'^unique/$', views.unique),
     url(r'^unique/(?P<pk>[0-9]+)/$', views.unique_detail),
 ]
+
+urlpatterns += staticfiles_urlpatterns()
