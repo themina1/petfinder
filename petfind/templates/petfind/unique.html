@@ -2,6 +2,7 @@
 
 {% block content %}
 <h1>Unique Animals</h1>
+<h5>The average time for uniques to be adopted is {{ averageTime }}.</h5>
 {% for unique in uniquelist %}
 	<div>
 		<h3><a href="{% url 'petfind.views.uniques_detail' pk=unique.petId %}">Name: {{ unique.petName }}</a></h3>
@@ -9,4 +10,8 @@
 		<p> Status: {{ unique.petStatus }}</p>
 	</div>
 {% endfor %}
+<h3>Here are the uniques that are no longer up for adoption.</h3>
+<h3><a href="{% url 'petfind.views.unique_adopted_list' %}" class="btn btn-success btn-large">
+        Unique Adopted</a> <a href="{% url 'petfind.views.unique_removed_list' %}" class="btn btn-danger btn-large">
+		Unique Removed</a></h3>
 {% endblock content %}

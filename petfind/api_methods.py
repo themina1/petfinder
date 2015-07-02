@@ -3,19 +3,16 @@
 from urllib.request import urlopen
 from json import load
 import codecs
-import pprint
 import os
 import django
 from django.utils import timezone
+from petfind.rockBridgetwitter import updateStatus
+import pprint
 
-
-os.environ.__setitem__("DJANGO_SETTINGS_MODULE", "petsite.settings")
-
-import petfind.models
 # To access Django Models in our script
-
+os.environ.__setitem__("DJANGO_SETTINGS_MODULE", "petsite.settings")
 django.setup()
-
+from petfind.models import Animal
 # Defining the constants:
 KEY = "6d3a2622c9ee34420afe02206d1cee12"
 URL = "http://api.petfinder.com/"
@@ -30,13 +27,38 @@ reader = codecs.getreader("utf-8")
 
 # Main method:
 def petExist(animal, pet_id):
-    if animal=="Cat":
-        return petfind.models.Cat.objects.filter(pk = pet_id).exists()
-    if animal=="Dog":
-        return petfind.models.Dog.objects.filter(pk = pet_id).exists()
-    else:
-        return petfind.models.UniqueAnimal.objects.filter(pk = pet_id).exists()
+    return Animal.objects.filter(pk = pet_id).exists()
     
+def getStatus(url, URL_JSON_KEY,pet_id):
+    """Returns the json object containing all the pet info from a particular shelter"""
+    
+    method = "pet.get?"
+    petId = "&id="+pet_id
+    url+= method + URL_JSON_KEY + petId
+    petJson = urlopen(url)
+    petsInfo = load(reader(petJson))
+    message = petsInfo['petfinder']['header']['status']['code']['$t']
+    if message == '100':
+        status = petsInfo['petfinder']['pet']['status']['$t']
+        return status
+    elif message =='201':
+        status = "Animal Removed"
+        return status
+    else:
+        print("Something went wrong. Sorry.")
+
+def changePetStatus():
+    animals = Animal.objects.all()
+    for animal in animals:
+        if animal.match== "No" and animal.petStatus!='X' and animal.petStatus!='Animal Removed':
+            pet_id = animal.petId
+            status = getStatus(URL,URL_JSON_KEY, pet_id)
+            animal.petStatus = status
+            animal.save()
+            print(pet_id+"'s status has been changed to "+status)
+        animal.match = "No"
+        animal.save()
+
 def shelterGetPets(url, URL_JSON_KEY, shelter_id):
     """Returns the json object containing all the pet info from a particular shelter"""
     
@@ -62,7 +84,8 @@ def addAnimalsToDb(petsInfo):
         age = pet['age']['$t']
         breeds = pet['breeds']['breed']
         breed = ""
-        try:                           # because some pets have multiple breed stored in a list
+        # because some pets have multiple breed stored in a list
+        try:                          
             breed = breeds['$t']
         except TypeError:
             for x in breeds:
@@ -72,78 +95,45 @@ def addAnimalsToDb(petsInfo):
         sex = pet['sex']['$t']
         size = pet['size']['$t']
         mix = pet['mix']['$t']
+        match = "Yes"
         features = pet['options']['option']
         feature = ""
+        # because some pets have multiple breed stored in a list
         try:
             feature = features['$t']
-        except TypeError:             # because some pets have multiple breed stored in a list
+        except TypeError:             
             for x in features:
                 feature += x['$t'] + ", "
-        
-        if pet['animal']['$t']=="Cat":
-            
-            if petExist(animal, pet_id):
-                firstSeen = petfind.models.Cat.objects.get(pk = pet_id).firstSeen
-            else:
-                firstSeen = timezone.now()
-                 
-            cat = petfind.models.Cat(petId = pet_id, 
-                                     petName = name, 
-                                     petDescription = desc, 
-                                     petAge = age, 
-                                     petBreed = breed, 
-                                     petStatus = status, 
-                                     petSex = sex, 
-                                     petSize = size, 
-                                     petMix = mix, 
-                                     petFeatures = feature,
-                                     lastSeen = timezone.now(),
-                                     firstSeen = firstSeen)
-            cat.save()
-            
-        elif pet['animal']['$t']=="Dog":
-            
-            if petExist(animal, pet_id):
-                firstSeen = petfind.models.Dog.objects.get(pk = pet_id).firstSeen
-            else:
-                firstSeen = timezone.now()
-
-            dog = petfind.models.Dog(petId = pet_id, 
-                                     petName = name, 
-                                     petDescription = desc, 
-                                     petAge = age, 
-                                     petBreed = breed, 
-                                     petStatus = status, 
-                                     petSex = sex, 
-                                     petSize = size, 
-                                     petMix = mix, 
-                                     petFeatures = feature,
-                                     lastSeen = timezone.now(),
-                                     firstSeen = firstSeen)
-            dog.save()
-
-
-        else:
-            if petExist(animal, pet_id):
-                firstSeen = petfind.models.UniqueAnimal.objects.get(pk = pet_id).firstSeen
-            else:
-                firstSeen = timezone.now()
+        photo = pet['media']['photos']['photo'][2]['$t']
+        if petExist(animal, pet_id):  
+            firstSeen = Animal.objects.get(pk = pet_id).firstSeen
+            pet =  Animal(animal = animal, petId = pet_id, petName = name, 
+                        petDescription = desc, petAge = age, 
+                        petBreed = breed, petStatus = status, 
+                        petSex = sex, petSize = size, 
+                        petMix = mix, petFeatures = feature, 
+                        lastSeen = timezone.now(), 
+                        firstSeen = firstSeen,match = match, petPhoto = photo) 
                 
-            uniqueAnimal = petfind.models.UniqueAnimal(petId = pet_id, 
-                                                       petName = name, 
-                                                       petDescription = desc, 
-                                                       petAge = age, 
-                                                       petBreed = breed, 
-                                                       petStatus = status, 
-                                                       petSex = sex, 
-                                                       petSize = size, 
-                                                       petMix = mix, 
-                                                       petFeatures = feature,
-                                                       lastSeen = timezone.now(),
-                                                       firstSeen = firstSeen)
-            uniqueAnimal.save()
+            pet.save()
+                
+# if the pet doesn't exist, add the pet.            
+        else:                                           
+            pet = Animal(animal = animal, petId = pet_id, petName = name, 
+                      petDescription = desc, petAge = age, 
+                      petBreed = breed, petStatus = status, 
+                      petSex = sex, petSize = size, 
+                      petMix = mix, petFeatures = feature, 
+                      lastSeen = timezone.now(), 
+                      firstSeen = timezone.now(), match = match, petPhoto = photo)   
+                
+            pet.save()
+            updateStatus(animal, name, pet_id)
+
+            print("A new %s has been added.", animal)
     
-    print("Pet information added to database")
+    #pprint.pprint(petsInfo)        
+    print("Pet information added to database.")
 
 ##########################################################################################################################
 
@@ -151,4 +141,5 @@ if __name__ == "__main__":
 
     petsInfo = shelterGetPets(URL, URL_JSON_KEY, SHELTER_ID)
     addAnimalsToDb(petsInfo)
-    pprint.pprint(petsInfo)
+    changePetStatus()
+

@@ -2,7 +2,9 @@
 
 {% block content %}
 <h1>Cats! There are {{ catCount }} cats listed!</h1>
-<h5>The average time for cats to be adopted is {{ avg }}</h5>
+<h5>The average time for cats to be adopted is {{ averageTime }}.</h5>
+<a href="http://thecatapi.com"><center><img src="http://thecatapi.com/api/images/get?format=src&type=gif"
+	alt="TheCatAPI random cat!" align="middle"></center></a>
 {% for cat in catlist %}
 	<div>
 		<h2><a href="{% url 'petfind.views.cats_detail' pk=cat.petId %}">Name: {{ cat.petName }}</a></h2>
@@ -10,4 +12,8 @@
 		<h4> Status: {{ cat.petStatus }}</h4>
 	</div>
 {% endfor %}
+<h3>Here are the cats that are no longer up for adoption</h3>
+<h3><a href="{% url 'petfind.views.cats_adopted_list' %}" class="btn btn-success btn-large">
+        Cats Adopted</a> <a href="{% url 'petfind.views.cats_removed_list' %}" class="btn btn-danger btn-large">
+		Cats Removed</a></h3>
 {% endblock content %}

@@ -2,6 +2,7 @@
 
 {% block content %}
 <h1>Dogs</h1>
+<h5>The average time for dogs to be adopted is {{ averageTime }}.</h5>
 {% for dog in doglist %}
 	<div>
 		<h3><a href="{% url 'petfind.views.dogs_detail' pk=dog.petId %}">Name: {{ dog.petName }}</a></h3>
@@ -9,4 +10,8 @@
 		<p> Status: {{ dog.petStatus }}</p>
 	</div>
 {% endfor %}
+<h3>Here are the dogs that are no longer up for adoption.</h3>
+<h3><a href="{% url 'petfind.views.dogs_adopted_list' %}" class="btn btn-success btn-large">
+        Dogs Adopted</a> <a href="{% url 'petfind.views.dogs_removed_list' %}" class="btn btn-danger btn-large">
+		Dogs Removed</a></h3>
 {% endblock content %}

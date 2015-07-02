@@ -7,8 +7,13 @@
 
     <div>
     	<h2>What kind of animal are you looking for?</h2>
-        <h3><a href="{% url 'petfind.views.cats' %}">Cats</a></h3>
-        <h3><a href="{% url 'petfind.views.dogs' %}">Dogs</a></h3>
-        <h3><a href="{% url 'petfind.views.unique' %}">Unique Animals</a></h3>
+        <h3><a href="{% url 'petfind.views.cats' %}"><button type="button" 
+        class="btn btn-info btn-large">Cats</button></a></h3> 
+        
+        <h3><a href="{% url 'petfind.views.dogs' %}"><button type="button" 
+        class="btn btn-info btn-large ">Dogs</button></a></h3>
+        
+        <h3><a href="{% url 'petfind.views.unique' %}"><button type="button" 
+        class="btn btn-info btn-large">Unique Animals</button></a></h3>
     </div>
 {% endblock content %}
