@@ -25,7 +25,7 @@ SECRET_KEY = 'g3woc357eqvtv!t#rj385jkr1&6##1dv_5)5t)7q+*3p)toze@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = []#"themina1.pythonanywhere.com"]
 
 
 # Application definition
