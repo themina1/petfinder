@@ -6,7 +6,7 @@ Created on Jul 2, 2015
 
 import tweepy
   
-def updateStatus(animal, name):
+def updateTwitterStatus(animal, name, pet_id):
     consumer_key = 'pzgRQNUrbgIIkphlnssurjaBa'
     consumer_secret = '0kswM3Uce9NwKvHRAKoZptBCX85QAFjBdwIIvGSpLyjYM4HEOV'
     access_token = '3355406643-8LM6r7tJosmkz5YRjhEFqH86Kpmf8zgsi14fsED'
@@ -19,8 +19,8 @@ def updateStatus(animal, name):
     api = tweepy.API(auth)
  
     # Sample method, used to update a status
-    status= ('We have a new %s up for adoption. %s would love to be your friend' % (animal, name))
+    status= ('We have a new %s up for adoption. %s would love to be your friend. Visit https://www.petfinder.com/petdetail/%s' % (animal, name,pet_id))
     api.update_status(status=status)
-    
+
 
     

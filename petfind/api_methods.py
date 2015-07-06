@@ -6,7 +6,7 @@ import codecs
 import os
 import django
 from django.utils import timezone
-from petfind.rockBridgetwitter import updateStatus
+from petfind.rockBridgetwitter import updateTwitterStatus
 import pprint
 
 # To access Django Models in our script
@@ -27,7 +27,9 @@ reader = codecs.getreader("utf-8")
 
 # Main method:
 def petExist(animal, pet_id):
+    """ Returns True if pet exists"""
     return Animal.objects.filter(pk = pet_id).exists()
+
     
 def getStatus(url, URL_JSON_KEY,pet_id):
     """Returns the json object containing all the pet info from a particular shelter"""
@@ -128,7 +130,7 @@ def addAnimalsToDb(petsInfo):
                       firstSeen = timezone.now(), match = match, petPhoto = photo)   
                 
             pet.save()
-            updateStatus(animal, name, pet_id)
+            updateTwitterStatus(animal, name, pet_id)
 
             print("A new %s has been added.", animal)
     

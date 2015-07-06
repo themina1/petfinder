@@ -1,7 +1,7 @@
 {% extends "petfind/base.html" %}
 
 {% block content %}
-<h1>Cats! There are {{ catCount }} cats listed!</h1>
+<h1><a href="{% url 'petfind.views.cats' %}">Cats!</a> There are {{ catCount }} cats listed!</h1>
 <h5>The average time for cats to be adopted is {{ averageTime }}.</h5>
 <a href="http://thecatapi.com"><center><img src="http://thecatapi.com/api/images/get?format=src&type=gif"
 	alt="TheCatAPI random cat!" align="middle"></center></a>
