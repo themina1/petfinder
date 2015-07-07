@@ -16,7 +16,7 @@ class Animal(models.Model):
     petSize = models.CharField(max_length = 10, blank = True, verbose_name ='Size')
     petMix = models.CharField(max_length = 10, blank = True, verbose_name ='Mixed?')
     petFeatures = models.CharField(max_length = 200, verbose_name ='Features', blank = True)
-    petPhoto = models.TextField(blank = True, verbose_name = 'Picture')
+    petPhoto = models.TextField(verbose_name = "Picture", blank = True)
     address = models.CharField(max_length = 200, blank = True, default = '10 Animal Place')
     city = models.CharField(max_length = 50, blank = True, default = 'Lexington')
     email = models.CharField(max_length = 200, blank = True, default = 'shelter@rockbridgespca.net' ) 
@@ -31,3 +31,13 @@ class Animal(models.Model):
     
     def __str__(self):
         return "Id: " + self.petId  + "Animal: " + self.animal + "Name: " + self.petName
+    
+class RedditPost(models.Model):
+    post_id = models.CharField(verbose_name = "Id", max_length = 20, default = "0", primary_key = True)
+    link = models.TextField(verbose_name = "Link", blank = True)
+    title = models.TextField(verbose_name = "Title", blank = True)
+    up_votes = models.CharField(verbose_name = 'Up Votes', max_length = 20, blank = True)
+    img = models.TextField(verbose_name = "Image", blank = True)
+    
+    def __str__(self):
+        return "Title: " + self.title

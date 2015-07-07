@@ -7,6 +7,8 @@ Created on Jul 2, 2015
 import tweepy
   
 def updateTwitterStatus(animal, name, pet_id):
+    """ Automatically tweets on the RockBridge Pet twitter page"""
+    
     consumer_key = 'pzgRQNUrbgIIkphlnssurjaBa'
     consumer_secret = '0kswM3Uce9NwKvHRAKoZptBCX85QAFjBdwIIvGSpLyjYM4HEOV'
     access_token = '3355406643-8LM6r7tJosmkz5YRjhEFqH86Kpmf8zgsi14fsED'

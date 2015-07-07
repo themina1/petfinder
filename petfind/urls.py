@@ -17,6 +17,7 @@ urlpatterns = [
     url(r'^unique/(?P<pk>[0-9]+)/$', views.unique_detail),
     url(r'^unique_adopted_list/$', views.unique_adopted_list),
     url(r'^unique_removed_list/$', views.unique_removed_list),
+    url(r'^reddit_posts/$', views.reddit_pets)
 ]
 
 urlpatterns += staticfiles_urlpatterns()

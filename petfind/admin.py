@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Animal
+from .models import Animal, RedditPost
 
 # Register your models here.
 
@@ -16,5 +16,8 @@ class AnimalAdmin(admin.ModelAdmin):
     list_display = ('petId','animal','petName','petStatus')
     list_filter = ['animal', 'petStatus']
     search_field = ['petId']
-    
+class RedditPostAdmin(admin.ModelAdmin):
+    list_display = ('post_id', 'title', 'up_votes')
+
 admin.site.register(Animal, AnimalAdmin)
+admin.site.register(RedditPost, RedditPostAdmin)

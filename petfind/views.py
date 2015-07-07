@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from datetime import timedelta
 from .models import Animal
+from petfind.reddit_posts import getCatReddit
+from petfind.models import RedditPost
 
 # Create your views here.
 def animal_list(request):
@@ -144,3 +146,10 @@ def unique_removed_list(request):
         avg = timedelta(days=0)
     averageTime=strfdelta(avg, "{days} days, {hours} hours, and {minutes} minutes")
     return render(request, 'petfind/unique_removed_list.html', {'uniquelist': uniquelist, 'uniqueCount': uniqueCount, 'averageTime': averageTime})
+
+
+def reddit_pets(request):
+    getCatReddit()
+    posts = RedditPost.objects.all()
+        
+    return render(request, 'petfind/reddit_posts.html', {'posts': posts})

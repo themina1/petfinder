@@ -7,7 +7,7 @@ import os
 import django
 from django.utils import timezone
 from petfind.rockBridgetwitter import updateTwitterStatus
-import pprint
+
 
 # To access Django Models in our script
 os.environ.__setitem__("DJANGO_SETTINGS_MODULE", "petsite.settings")
