@@ -1,8 +1,9 @@
 {% extends "petfind/base.html" %}
 
 {% block content %}
-<h1>Dogs</h1>
+<h1><a href="{% url 'petfind.views.dogs' %}">Dogs!</a> There are {{ dogCount }} dogs listed!</h1>
 <h5>The average time for dogs to be adopted is {{ averageTime }}.</h5>
+<center><a href="http://loremflickr.com"><img src="http://loremflickr.com/320/240/dog/" alt="Doggie"></a></center>
 {% for dog in doglist %}
 	<div>
 		<h3><a href="{% url 'petfind.views.dogs_detail' pk=dog.petId %}">Name: {{ dog.petName }}</a></h3>

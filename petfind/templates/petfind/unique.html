@@ -1,8 +1,9 @@
 {% extends "petfind/base.html" %}
 
 {% block content %}
-<h1>Unique Animals</h1>
+<h1><a href="{% url 'petfind.views.unique' %}">Uniques!</a> There are {{ uniqueCount }} uniques listed!</h1>
 <h5>The average time for uniques to be adopted is {{ averageTime }}.</h5>
+<center><a href="http://loremflickr.com"><img src="http://loremflickr.com/320/240/animal" alt="Unique Animal"></a></center>
 {% for unique in uniquelist %}
 	<div>
 		<h3><a href="{% url 'petfind.views.uniques_detail' pk=unique.petId %}">Name: {{ unique.petName }}</a></h3>
